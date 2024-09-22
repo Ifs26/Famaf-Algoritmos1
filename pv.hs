@@ -1,7 +1,7 @@
 ---------Parcial 1 Tema A 2023------------------------------------------------------------------------------
 -- 1a = 2
 -- 1b = 2
--- 1c = 1 && 4 asdasdasd
+-- 1c = 1 && 4 asdasdasdasdasd
 -----------------------------------------------------------------------------------------------
 data MaterialesConstruccion = Ladrillo TipoLadrillo UsoDeLadrillo Precio
                             | Vigueta Largo MaterialViga Precio

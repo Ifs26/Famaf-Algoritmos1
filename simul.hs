@@ -120,3 +120,5 @@ quienJugo _ [] = []
 
 -- quienJugo Papel [ mark , eliz , rebe] 
 -- >>["Rebecca"] asdadadas
+
+----------------------------------------------------------------------------  
