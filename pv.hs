@@ -191,3 +191,83 @@ promedioGeneral (EvolucionDeEstudiante nm ed cal estEd) nm_tc | nm_tc == nm = Ju
 -- Just 10.0
 -- ghci> promedioGeneral lest1 "Sara"   
 -- Just 3.3333333
+
+-------------------------------------------------------
+
+--type Nombre = String
+type CapacidadDeCarga = Int
+type CantidadToneladas = Int
+
+type LitrosTransportados = Int
+type TemperaturaOperC = Float
+
+data Vagon = Minerales Nombre CapacidadDeCarga CantidadToneladas 
+            | Cisterna Nombre LitrosTransportados TemperaturaOperC
+                deriving(Show)
+
+vagonCobre :: Vagon
+vagonCobre = Minerales "Cobre" 50 35
+
+vagonAgua :: Vagon
+vagonAgua = Cisterna "Agua" 25000 15.8
+
+
+excesoMinerales :: Vagon -> Int -> Bool 
+excesoMinerales (Minerales nm cdc ctn) tonMax = (ctn > tonMax)
+excesoMinerales _ tonMax = False
+
+-- *Main> excesoMinerales vagonCobre 40
+-- False
+-- *Main> excesoMinerales vagonCobre 20
+-- True
+
+cisternaFrio :: Vagon -> Bool
+cisternaFrio (Cisterna nm lTrans temCelcius) = temCelcius < 5
+cisternaFrio _ = False
+
+vA1:: Vagon
+vA1 = Cisterna "Agua" 25000 4
+
+-- *Main> cisternaFrio vA1
+-- True
+-- *Main> cisternaFrio vagonAgua 
+-- False
+
+minimaCarga :: [Vagon] -> Int
+minimaCarga [] = 100
+minimaCarga ((Minerales nm cdc ctn):xs) = min ctn (minimaCarga xs)
+minimaCarga (_:xs) = minimaCarga xs
+
+vC1 :: Vagon
+vC1 = Minerales "Cobre" 50 35
+
+vC2 :: Vagon
+vC2 = Minerales "Cobre" 50 38
+
+vC3 :: Vagon
+vC3 = Minerales "Cobre" 50 25
+
+lvminer = [vC1,vC2,vC3]
+
+-- *Main> minimaCarga lvminer
+-- 25
+-- *Main> minimaCarga [vC1,vC2]
+-- 35
+
+data Tren = SinVagones | Encadena Vagon Tren deriving(Show)
+
+ejemploTren :: Tren
+ejemploTren = Encadena vagonAgua (Encadena vagonCobre (Encadena vC2 SinVagones))
+
+sumarCarga :: Tren -> Int -> Tren
+sumarCarga SinVagones k = SinVagones
+sumarCarga (Encadena (Minerales nm cdc ctn) cadenaTren) k | (ctn+k) <= cdc = Encadena (Minerales nm cdc (ctn+k)) (sumarCarga cadenaTren k)
+                                                          | otherwise = Encadena (Minerales nm cdc (ctn)) (sumarCarga cadenaTren k)
+sumarCarga (Encadena vag cadenaTren) k = (Encadena vag (sumarCarga cadenaTren k))
+
+-- *Main> sumarCarga ejemploTren 20
+-- Encadena (Cisterna "Agua" 25000 15.8) (Encadena (Minerales "Cobre" 50 35) (Encadena (Minerales "Cobre" 50 38) SinVagones))
+-- *Main> sumarCarga ejemploTren 10
+-- Encadena (Cisterna "Agua" 25000 15.8) (Encadena (Minerales "Cobre" 50 45) (Encadena (Minerales "Cobre" 50 48) SinVagones))
+-- *Main> sumarCarga ejemploTren 13
+-- Encadena (Cisterna "Agua" 25000 15.8) (Encadena (Minerales "Cobre" 50 48) (Encadena (Minerales "Cobre" 50 38) SinVagones))
