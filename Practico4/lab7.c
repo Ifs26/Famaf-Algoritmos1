@@ -29,28 +29,23 @@ void pedir_arreglo(int n_max, int a[]){
 }
 
 void imprimir_arreglo(int n_max, int a[]){
+    assert(n_max >0);
     int it = 0;
     printf("[");
-    if (n_max == 0){
-        printf("%d]",a[0]);
-    } else if (n_max > 0){
-        while (it < n_max){
-            if (it == n_max-1){
-                printf("%d]",a[it]);
-            } else {
-                printf("%d,",a[it]);
-            }   
-            it = it+1;   
+    while (it < n_max){
+        printf("%d",a[it]);
+        if (it != n_max-1){
+            printf(","); 
         }
+        it = it+1;  
     }
+    printf("]");
 }
 
 int main(){
 
-    int n_tam = 0;
+    int n_tam = pedint();
     int a[n_tam];
-
-    n_tam = pedint();
 
     pedir_arreglo(n_tam,a);
     imprimir_arreglo(n_tam,a);
